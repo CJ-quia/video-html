@@ -2,87 +2,55 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>YouTube Player Controller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Video med hastighed og start/slut</title>
   <style>
     body {
-      background: #000;
-      margin: 0;
-      padding: 0;
+      background-color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-    }
-    .video-container {
-      position: relative;
-      width: 100%;
-      max-width: 560px;
-      padding-top: 56.25%; /* 16:9 */
+      margin: 0;
     }
     #player {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      width: 560px;
+      height: 315px;
     }
   </style>
 </head>
 <body>
-
-  <div class="video-container">
-    <div id="player"></div>
-  </div>
+  <div id="player"></div>
 
   <script>
-    // Indlæs YouTube API kun én gang
-    if (!window.YT) {
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
+    // Indlæs YouTube IFrame API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    let player;
-
-    // Hent parametre fra URL'en (fx ?v=VIDEOID&start=10&end=60&speed=1.5)
-    const urlParams = new URLSearchParams(window.location.search);
-    const videoId = urlParams.get('v') || 'FXkCPtxHLew';
-    const start = parseFloat(urlParams.get('start')) || 0;
-    const end = parseFloat(urlParams.get('end')) || 0;
-    const speed = parseFloat(urlParams.get('speed')) || 1.0;
+    var player;
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
-        videoId: videoId,
+        videoId: 'FXkCPtxHLew', // ← din video-ID her
         playerVars: {
-          start: start,
-          end: end,
+          start: 10,
+          end: 60,
           rel: 0,
-          modestbranding: 1
+          modestbranding: 1,
+          controls: 1
         },
         events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
+          'onReady': onPlayerReady
         }
       });
     }
 
     function onPlayerReady(event) {
-      setTimeout(() => event.target.setPlaybackRate(speed), 1000);
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        event.target.setPlaybackRate(speed);
-      }
-    }
-
-    // Hvis API allerede er indlæst (fx ved flere videoer)
-    if (window.YT && YT.Player) {
-      onYouTubeIframeAPIReady();
+      event.target.setPlaybackRate(1.5); // ← sæt hastighed
+      event.target.playVideo();          // ← start automatisk
     }
   </script>
-
 </body>
 </html>
