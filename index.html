@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube videoafspiller</title>
+  <title>YouTube video med parametre</title>
   <style>
     body {
-      background-color: #000;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      background-color: #000;
     }
     #player {
       width: 560px;
@@ -42,25 +42,25 @@
 
     var player;
     function onYouTubeIframeAPIReady() {
-     player = new YT.Player('player', {
-  videoId: videoId,
-  playerVars: {
-    start: startTime,
-    end: endTime > 0 ? endTime : undefined,
-    rel: 0,
-    modestbranding: 1,
-    controls: 1,
-    autoplay: 0 // ← tilføj denne linje for at forhindre automatisk afspilning
-  },
-  events: {
-    'onReady': onPlayerReady
-  }
-});
-
+      player = new YT.Player('player', {
+        videoId: videoId,
+        playerVars: {
+          start: startTime,
+          end: endTime > 0 ? endTime : undefined,
+          rel: 0,
+          modestbranding: 1,
+          controls: 1,
+          autoplay: 0 // ← forhindrer automatisk afspilning
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
 
     function onPlayerReady(event) {
       event.target.setPlaybackRate(speed);
-      event.target.playVideo();
+      // event.target.playVideo(); ← fjernet for at undgå autoafspilning
     }
   </script>
 </body>
