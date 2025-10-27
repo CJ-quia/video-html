@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube Video med hastighed og start/slut</title>
+  <title>YouTube videoafspiller</title>
   <style>
     body {
       background-color: #000;
@@ -23,6 +23,17 @@
   <div id="player"></div>
 
   <script>
+    // Funktion til at hente parametre fra URL’en
+    function getParam(name, defaultValue) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || defaultValue;
+    }
+
+    const videoId = getParam('id', 'FXkCPtxHLew'); // fallback hvis ingen id er angivet
+    const startTime = parseInt(getParam('start', '0'));
+    const endTime = parseInt(getParam('end', '0'));
+    const speed = parseFloat(getParam('speed', '1.0'));
+
     // Indlæs YouTube IFrame API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -30,13 +41,12 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     var player;
-
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
-        videoId: 'FXkCPtxHLew', // ← din video-ID her
+        videoId: videoId,
         playerVars: {
-          start: 10,
-          end: 60,
+          start: startTime,
+          end: endTime > 0 ? endTime : undefined,
           rel: 0,
           modestbranding: 1,
           controls: 1
@@ -48,8 +58,8 @@
     }
 
     function onPlayerReady(event) {
-      event.target.setPlaybackRate(1.5); // ← sæt hastighed
-      event.target.playVideo();          // ← start automatisk
+      event.target.setPlaybackRate(speed);
+      event.target.playVideo();
     }
   </script>
 </body>
